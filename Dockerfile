@@ -1,8 +1,10 @@
 FROM archlinux/base
 
-RUN pacman --noconfirm -Syu 
 
-RUN pacman --noconfirm -S \
+###############################################################################
+# Install packages
+
+RUN pacman --noconfirm -Syu \
     autoconf-archive \
     base-devel \
     gir-to-d \
@@ -12,7 +14,21 @@ RUN pacman --noconfirm -S \
     python-gobject \
     python-mako \
     python-markdown \
+    rust \
     yelp-tools
+
+
+###############################################################################
+# Copy files
+
+WORKDIR /app
+
+COPY ./patches patches
+
+COPY ./libnm-rs libnm-rs
+
+###############################################################################
+# Python generation
 
 WORKDIR /app
 
@@ -32,15 +48,11 @@ RUN g-ir-doc-tool --language=Python -o . /usr/share/gir-1.0/NM-1.0.gir
 
 RUN yelp-build html .
 
-WORKDIR /app
 
-COPY ./patches patches
-
-RUN ls -al patches
+###############################################################################
+# D-lang generation
 
 WORKDIR /usr/share/gir-1.0/
-
-RUN ls -al
 
 RUN patch < /app/patches/nm-no-doc-version.patch
 
@@ -48,8 +60,26 @@ WORKDIR /app
 
 RUN girtod -i NM-1.0.gir -o d-lang
 
-RUN ls -al d-lang/nm
+###############################################################################
+# Rust generation
 
-WORKDIR /app/d-lang/nm
+WORKDIR /app
+
+RUN git clone --progress https://github.com/gtk-rs/gir.git
+
+WORKDIR /app/gir
+
+RUN cargo build --release
+
+WORKDIR /app/libnm-rs
+
+RUN ../gir/target/release/gir -c Gir_NM.sys.toml -o nm-sys -d /usr/share/gir-1.0/
+
+RUN ../gir/target/release/gir -c Gir_NM.toml
+
+WORKDIR /app
+
+###############################################################################
+# Run web server
 
 CMD ["python", "-m", "http.server"]
