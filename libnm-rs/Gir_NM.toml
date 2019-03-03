@@ -8,6 +8,7 @@ work_mode = "normal"
 single_version_file = true
 
 generate = [
+    "NM.*",
     "NM.80211ApFlags",
     "NM.80211ApSecurityFlags",
     "NM.80211Mode",
@@ -137,7 +138,7 @@ generate = [
     "NM.VpnEditorPluginCapability",
     "NM.VpnPluginError",
     "NM.VpnPluginFailure",
-    "NM.VpnPluginInfo"
+    "NM.VpnPluginInfo",
     "NM.VpnPluginOld",
     "NM.VpnServicePlugin",
     "NM.VpnServiceState",
