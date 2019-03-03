@@ -1,0 +1,11 @@
+--- NM-1.0.gir
++++ NM-1.0.gir
+@@ -38702,6 +38702,6 @@
+       <parameters>
+         <parameter name="inaddr" transfer-ownership="none">
+           <doc xml:space="preserve">the address that should be converted to string.</doc>
+-          <type c:type="in_addr_t"/>
++          <type name="in_addr_t" c:type="in_addr_t"/>
+         </parameter>
+         <parameter name="dst" transfer-ownership="none">
+           <doc xml:space="preserve">the destination buffer, it must contain at least

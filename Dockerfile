@@ -19,13 +19,21 @@ RUN pacman --noconfirm -Syu \
 
 
 ###############################################################################
-# Copy files
+# Copy patches
 
 WORKDIR /app
 
 COPY ./patches patches
 
-COPY ./libnm-rs libnm-rs
+
+###############################################################################
+# Patch NM-1.0.gir
+
+WORKDIR /usr/share/gir-1.0/
+
+RUN patch < /app/patches/nm-no-doc-version.patch
+RUN patch < /app/patches/nm-in-addr.patch
+
 
 ###############################################################################
 # Python generation
@@ -52,13 +60,10 @@ RUN yelp-build html .
 ###############################################################################
 # D-lang generation
 
-WORKDIR /usr/share/gir-1.0/
-
-RUN patch < /app/patches/nm-no-doc-version.patch
-
 WORKDIR /app
 
 RUN girtod -i NM-1.0.gir -o d-lang
+
 
 ###############################################################################
 # Rust generation
@@ -69,17 +74,28 @@ RUN git clone --progress https://github.com/gtk-rs/gir.git
 
 WORKDIR /app/gir
 
+RUN patch -p0 < /app/patches/gir-source-position.patch
+RUN patch -p0 < /app/patches/gir-in-addr.patch
+
 RUN cargo build --release
+
+WORKDIR /app
+
+COPY ./libnm-rs libnm-rs
 
 WORKDIR /app/libnm-rs
 
-RUN ../gir/target/release/gir -c Gir_NM.sys.toml -o nm-sys -d /usr/share/gir-1.0/
+RUN ../gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_NM.sys.toml -o nm-sys
 
-RUN ../gir/target/release/gir -c Gir_NM.toml
+RUN ../gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_NM.toml
 
 WORKDIR /app
+
 
 ###############################################################################
 # Run web server
 
-CMD ["python", "-m", "http.server"]
+#CMD ["python", "-m", "http.server"]
+
+CMD ["bash", "-c", "'sleep infinity'"]
+

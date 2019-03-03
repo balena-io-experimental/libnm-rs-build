@@ -1,5 +1,3 @@
-diff --git src/parser.rs src/parser.rs
-index afb9f86..50c13d9 100644
 --- src/parser.rs
 +++ src/parser.rs
 @@ -182,6 +182,7 @@ impl Library {

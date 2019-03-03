@@ -1,5 +1,5 @@
---- /usr/share/gir-1.0/NM-1.0.gir	2019-02-23 17:04:43.000000000 +0200
-+++ NM-1.0.gir	2019-02-24 17:29:39.755339579 +0200
+--- NM-1.0.gir
++++ NM-1.0.gir
 @@ -1530,7 +1530,6 @@
                glib:get-type="nm_checkpoint_create_flags_get_type"
                c:type="NMCheckpointCreateFlags">
