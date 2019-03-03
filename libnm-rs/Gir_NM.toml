@@ -123,6 +123,7 @@ generate = [
     "NM.SettingWirelessSecurityPmf",
     "NM.SettingWirelessSecurityWpsMethod",
     "NM.SettingWirelessWakeOnWLan",
+    "NM.SimpleConnection",
     "NM.State",
     "NM.TCQdisc",
     "NM.TCTfilter",
