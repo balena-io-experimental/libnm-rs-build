@@ -5,17 +5,20 @@ FROM archlinux/base
 # Install packages
 
 RUN pacman --noconfirm -Syu \
-    autoconf-archive \
-    base-devel \
-    gir-to-d \
+#    autoconf-archive \
+#    base-devel \
+    gcc \
+#    gir-to-d \
     git \
+    gobject-introspection \
     libnm \
     mlocate \
-    python-gobject \
-    python-mako \
-    python-markdown \
-    rust \
-    yelp-tools
+    patch \
+#    python-gobject \
+#    python-mako \
+#    python-markdown \
+    rust
+#    yelp-tools
 
 
 ###############################################################################
@@ -38,31 +41,31 @@ RUN patch < /app/patches/nm-in-addr.patch
 ###############################################################################
 # Python generation
 
-WORKDIR /app
+# WORKDIR /app
 
-RUN git clone --progress https://gitlab.gnome.org/GNOME/gobject-introspection.git
+# RUN git clone --progress https://gitlab.gnome.org/GNOME/gobject-introspection.git
 
-WORKDIR /app/gobject-introspection
+# WORKDIR /app/gobject-introspection
 
-RUN ./autogen.sh --enable-doctool --prefix=/usr
+# RUN ./autogen.sh --enable-doctool --prefix=/usr
 
-RUN make -l 4
+# RUN make -l 4
 
-RUN make install
+# RUN make install
 
-WORKDIR /app/docs
+# WORKDIR /app/docs
 
-RUN g-ir-doc-tool --language=Python -o . /usr/share/gir-1.0/NM-1.0.gir
+# RUN g-ir-doc-tool --language=Python -o . /usr/share/gir-1.0/NM-1.0.gir
 
-RUN yelp-build html .
+# RUN yelp-build html .
 
 
 ###############################################################################
 # D-lang generation
 
-WORKDIR /app
+# WORKDIR /app
 
-RUN girtod -i NM-1.0.gir -o d-lang
+# RUN girtod -i NM-1.0.gir -o d-lang
 
 
 ###############################################################################
