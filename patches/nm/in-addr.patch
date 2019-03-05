@@ -1,6 +1,6 @@
 --- NM-1.0.gir
 +++ NM-1.0.gir
-@@ -38702,6 +38702,6 @@
+@@ -38702,7 +38702,7 @@
        <parameters>
          <parameter name="inaddr" transfer-ownership="none">
            <doc xml:space="preserve">the address that should be converted to string.</doc>

@@ -1,0 +1,20 @@
+--- ModemManager-1.0.gir
++++ ModemManager-1.0.gir
+@@ -2056,7 +2056,7 @@
+         </parameters>
+       </method>
+       <field name="parent" introspectable="0" readable="0" private="1">
+-        <type c:type="MmGdbusCallProxy"/>
++        <type name="GObject.Object" c:type="GObject"/>
+       </field>
+       <field name="priv" readable="0" private="1">
+         <type name="CallPrivate" c:type="MMCallPrivate*"/>
+@@ -2220,7 +2220,7 @@
+             c:type="MMCallClass"
+             glib:is-gtype-struct-for="Call">
+       <field name="parent" introspectable="0" readable="0" private="1">
+-        <type c:type="MmGdbusCallProxyClass"/>
++        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
+       </field>
+     </record>
+     <enumeration name="CallDirection"
