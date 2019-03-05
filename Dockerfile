@@ -7,10 +7,11 @@ FROM archlinux/base
 RUN pacman --noconfirm -Syu \
     autoconf-archive \
     base-devel \
-#    gir-to-d \
+    gir-to-d \
     git \
 #    gobject-introspection \
     libnm \
+    libmm-glib-dev \
     mlocate \
     patch \
     python-gobject \
@@ -38,7 +39,7 @@ RUN patch < /app/patches/nm-in-addr.patch
 
 
 ###############################################################################
-# Python generation
+# Build gobject-introspection
 
 WORKDIR /app
 
@@ -52,9 +53,21 @@ RUN make -l 4
 
 RUN make install
 
-WORKDIR /app/docs
+###############################################################################
+# Python generation for NetworkManager
+
+WORKDIR /app/docs/nm
 
 RUN g-ir-doc-tool --language=Python -o . /usr/share/gir-1.0/NM-1.0.gir
+
+RUN yelp-build html .
+
+###############################################################################
+# Python generation for ModemManager
+
+WORKDIR /app/docs/mm
+
+RUN g-ir-doc-tool --language=Python -o . /usr/share/gir-1.0/ModemManager-1.0.gir
 
 RUN yelp-build html .
 
@@ -62,13 +75,15 @@ RUN yelp-build html .
 ###############################################################################
 # D-lang generation
 
-# WORKDIR /app
+WORKDIR /app/d-lang
 
-# RUN girtod -i NM-1.0.gir -o d-lang
+RUN girtod -i NM-1.0.gir -o nm
+
+RUN girtod -i ModemManager-1.0.gir -o mm
 
 
 ###############################################################################
-# Rust generation
+# Rust generation for NetworkManager
 
 WORKDIR /app
 
