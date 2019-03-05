@@ -106,11 +106,12 @@ RUN ../gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_NM.sys.toml -o nm-sy
 
 RUN ../gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_NM.toml
 
-WORKDIR /app
-
-
 ###############################################################################
 # Run web server
 
-CMD ["python", "-m", "http.server"]
+WORKDIR /app
+
+COPY ./serve.py .
+
+CMD ["python", "serve.py"]
 
