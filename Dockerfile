@@ -11,7 +11,7 @@ RUN pacman --noconfirm -Syu \
     git \
 #    gobject-introspection \
     libnm \
-    libmm-glib-dev \
+    libmm-glib \
     mlocate \
     patch \
     python-gobject \
