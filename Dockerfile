@@ -91,7 +91,7 @@ RUN patch < /app/patches/mm/no-type-name.patch
 ###############################################################################
 # Python generation for NetworkManager
 
-WORKDIR /app/docs/nm
+WORKDIR /build/docs/nm
 
 RUN g-ir-doc-tool --language=Python -o . /usr/share/gir-1.0/NM-1.0.gir
 
@@ -101,7 +101,7 @@ RUN yelp-build html .
 ###############################################################################
 # Python generation for ModemManager
 
-WORKDIR /app/docs/mm
+WORKDIR /build/docs/mm
 
 RUN g-ir-doc-tool --language=Python -o . /usr/share/gir-1.0/ModemManager-1.0.gir
 
@@ -111,7 +111,7 @@ RUN yelp-build html .
 ###############################################################################
 # D-lang generation
 
-WORKDIR /app/d-lang
+WORKDIR /build/d-lang
 
 RUN girtod -i NM-1.0.gir -o nm
 
@@ -121,7 +121,7 @@ RUN girtod -i ModemManager-1.0.gir -o mm
 ###############################################################################
 # Generate JSON versions
 
-WORKDIR /app/json
+WORKDIR /build/json
 
 RUN xml2json -t xml2json --pretty --strip_text --strip_namespace --strip_newlines -o NM-1.0.json /usr/share/gir-1.0/NM-1.0.gir
 
@@ -131,11 +131,13 @@ RUN xml2json -t xml2json --pretty --strip_text --strip_namespace --strip_newline
 ###############################################################################
 # Generate TOML gir definitions
 
-WORKDIR /app
+WORKDIR /build
 
 COPY ./libnm-rs libnm-rs
 
 COPY ./libmm-rs libmm-rs
+
+WORKDIR /app
 
 COPY ./generate.py .
 
@@ -145,21 +147,21 @@ RUN python generate.py
 ###############################################################################
 # Rust generation for NetworkManager
 
-WORKDIR /app/libnm-rs
+WORKDIR /build/libnm-rs
 
-RUN ../gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_NM.sys.toml -o nm-sys
+RUN /app/gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_NM.sys.toml -o nm-sys
 
-RUN ../gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_NM.toml
+RUN /app/gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_NM.toml
 
 
 ###############################################################################
 # Rust generation for ModemManager
 
-WORKDIR /app/libmm-rs
+WORKDIR /build/libmm-rs
 
-RUN ../gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_ModemManager.sys.toml -o mm-sys
+RUN /app/gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_ModemManager.sys.toml -o mm-sys
 
-RUN ../gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_ModemManager.toml
+RUN /app/gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_ModemManager.toml
 
 
 ###############################################################################
@@ -169,5 +171,7 @@ WORKDIR /app
 
 COPY ./serve.py .
 
-CMD ["python", "serve.py"]
+WORKDIR /build
+
+CMD ["python", "/app/serve.py"]
 

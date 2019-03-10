@@ -5,16 +5,6 @@ import itertools
 import json
 
 
-def read_json(name):
-    f = open(name, 'r')
-
-    data = json.load(f)
-
-    f.close()
-
-    return data
-
-
 def strip_namespaces(data):
     if type(data) == list:
         for value in data:
@@ -78,8 +68,33 @@ def extract_objects(file_name):
     return names
 
 
+MANUAL = '''
+manual = [
+    "GObject.Object",
+    "GLib.ByteArray",
+    "GLib.Bytes",
+    "GLib.FileTest",
+    "GLib.Error",
+    "GLib.KeyFile",
+    "GLib.ObjectClass",
+    "GLib.PtrArray",
+    "GLib.Variant",
+    "GLib.VariantType",
+    "Gio.AsyncReadyCallback",
+    "Gio.Cancellable",
+    "Gio.DBusConnection",
+    "Gio.DBusInterfaceInfo",
+    "Gio.DBusMethodInvocation",
+    "Gio.DBusObjectManagerClientFlags",
+    "Gio.DBusProxy",
+    "Gio.InputStream",
+    "Gio.OutputStream",
+]
+'''
+
+
 def generate_nm_toml():
-    names = extract_objects('json/NM-1.0.json')
+    names = extract_objects('/build/json/NM-1.0.json')
 
     names = ['    "NM.' + name + '",\n' for name in names]
 
@@ -96,36 +111,14 @@ generate = [
     "NM.*",
 {}]
 
-manual = [
-    "GObject.Object",
-    "GLib.ByteArray",
-    "GLib.Bytes",
-    "GLib.FileTest",
-    "GLib.Error",
-    "GLib.KeyFile",
-    "GLib.ObjectClass",
-    "GLib.PtrArray",
-    "GLib.Variant",
-    "GLib.VariantType",
-    "Gio.AsyncReadyCallback",
-    "Gio.Cancellable",
-    "Gio.DBusConnection",
-    "Gio.DBusInterfaceInfo",
-    "Gio.DBusMethodInvocation",
-    "Gio.DBusObjectManagerClientFlags",
-    "Gio.DBusProxy",
-    "Gio.InputStream",
-    "Gio.OutputStream",
-]
-'''.format(''.join(names))
+{}
+'''.format(''.join(names), MANUAL)
 
-    file = open('libnm-rs/Gir_NM.toml', 'w+')
-    file.write(toml) 
-    file.close()
+    save_file('/build/libnm-rs/Gir_NM.toml', toml)
 
 
 def generate_mm_toml():
-    names = extract_objects('json/ModemManager-1.0.json')
+    names = extract_objects('/build/json/ModemManager-1.0.json')
 
     names = ['    "ModemManager.' + name + '",\n' for name in names]
 
@@ -142,32 +135,23 @@ generate = [
     "ModemManager.*",
 {}]
 
-manual = [
-    "GObject.Object",
-    "GLib.ByteArray",
-    "GLib.Bytes",
-    "GLib.FileTest",
-    "GLib.Error",
-    "GLib.KeyFile",
-    "GLib.ObjectClass",
-    "GLib.PtrArray",
-    "GLib.Variant",
-    "GLib.VariantType",
-    "Gio.AsyncReadyCallback",
-    "Gio.Cancellable",
-    "Gio.DBusConnection",
-    "Gio.DBusInterfaceInfo",
-    "Gio.DBusMethodInvocation",
-    "Gio.DBusObjectManagerClientFlags",
-    "Gio.DBusProxy",
-    "Gio.InputStream",
-    "Gio.OutputStream",
-]
-'''.format(''.join(names))
+{}
+'''.format(''.join(names), MANUAL)
 
-    file = open('libmm-rs/Gir_ModemManager.toml', 'w+')
-    file.write(toml)
-    file.close()
+    save_file('/build/libmm-rs/Gir_ModemManager.toml', toml)
+
+
+def read_json(path):
+    f = open(path, 'r')
+    data = json.load(f)
+    f.close()
+    return data
+
+
+def save_file(path, contents):
+    f = open(path, 'w')
+    f.write(contents)
+    f.close()
 
 
 generate_nm_toml()
