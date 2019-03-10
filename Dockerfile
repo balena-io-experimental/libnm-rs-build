@@ -17,8 +17,15 @@ RUN pacman --noconfirm -Syu \
     python-gobject \
     python-mako \
     python-markdown \
+    python-pip \
     rust \
     yelp-tools
+
+
+###############################################################################
+# Install external Python dependencies
+
+RUN pip install https://github.com/hay/xml2json/zipball/master
 
 
 ###############################################################################
@@ -112,11 +119,31 @@ RUN girtod -i ModemManager-1.0.gir -o mm
 
 
 ###############################################################################
-# Rust generation for NetworkManager
+# Generate JSON versions
+
+WORKDIR /app/json
+
+RUN xml2json -t xml2json --pretty --strip_text --strip_namespace --strip_newlines -o NM-1.0.json /usr/share/gir-1.0/NM-1.0.gir
+
+RUN xml2json -t xml2json --pretty --strip_text --strip_namespace --strip_newlines -o ModemManager-1.0.json /usr/share/gir-1.0/ModemManager-1.0.gir
+
+
+###############################################################################
+# Generate TOML gir definitions
 
 WORKDIR /app
 
 COPY ./libnm-rs libnm-rs
+
+COPY ./libmm-rs libmm-rs
+
+COPY ./generate.py .
+
+RUN python generate.py
+
+
+###############################################################################
+# Rust generation for NetworkManager
 
 WORKDIR /app/libnm-rs
 
@@ -127,10 +154,6 @@ RUN ../gir/target/release/gir -d /usr/share/gir-1.0/ -c Gir_NM.toml
 
 ###############################################################################
 # Rust generation for ModemManager
-
-WORKDIR /app
-
-COPY ./libmm-rs libmm-rs
 
 WORKDIR /app/libmm-rs
 
