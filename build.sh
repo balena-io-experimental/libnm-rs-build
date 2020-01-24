@@ -7,19 +7,21 @@ then
     mkdir build
 fi
 
-if [ -d "build/libnm-rs" ]
+pushd build
+
+if [ -d "libnm-rs" ]
 then
-    if [ -d "build/libnm-rs/target" ]
+    if [ -d "libnm-rs/target" ]
     then
-        mv build/libnm-rs/target build
+        mv libnm-rs/target .
     fi
 
-    rm -rf build/libnm-rs
+    rm -rf libnm-rs
 fi
 
-cp -r libnm-rs build
+cp -r ../libnm-rs .
 
-pushd build/libnm-rs
+pushd libnm-rs
 
 if [ -d "../target" ]
 then
@@ -40,7 +42,7 @@ export PATH=$PATH:~/.local/bin
 
 xml2json -t xml2json --pretty --strip_text --strip_namespace --strip_newlines -o NM-1.0.json NM-1.0.gir
 
-popd
+popd # gir-files
 
 ../../generate-toml.py
 
@@ -56,4 +58,6 @@ RUST_BACKTRACE=1 cargo run --example connectivity || true
 
 RUST_BACKTRACE=1 cargo run --example connections || true
 
-popd
+popd # libnm-rs
+
+popd # build
