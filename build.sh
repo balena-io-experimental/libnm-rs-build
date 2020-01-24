@@ -2,31 +2,21 @@
 
 set -e
 
-if [ ! -d "build" ]
+if [ ! -d "dist" ]
 then
-    mkdir build
+    mkdir dist
 fi
 
-pushd build
+pushd dist
 
-if [ -d "libnm-rs" ]
+if [ -d "libnm-rs-gen" ]
 then
-    if [ -d "libnm-rs/target" ]
-    then
-        mv libnm-rs/target .
-    fi
-
-    rm -rf libnm-rs
+    rm -rf libnm-rs-gen
 fi
 
-cp -r ../libnm-rs .
+cp -r ../libnm-rs libnm-rs-gen
 
-pushd libnm-rs
-
-if [ -d "../target" ]
-then
-    mv ../target .
-fi
+pushd libnm-rs-gen
 
 mkdir gir-files
 
@@ -50,14 +40,42 @@ popd # gir-files
 
 ../../gir -d gir-files -c Gir_NM.toml
 
+rm -rf nm-sys/src/auto
+rm -rf src/auto/versions.txt
+
 ../../merge-auto.py
 
 cargo fmt
 
-RUST_BACKTRACE=1 cargo run --example connectivity || true
+popd # libnm-rs-gen
 
-RUST_BACKTRACE=1 cargo run --example connections || true
+if [ ! -d "libnm-rs" ]
+then
+    git clone git@github.com:balena-io-modules/libnm-rs.git
+fi
+
+pushd libnm-rs
+
+git pull --rebase
+
+rm -rf src
+rm -rf nm-sys
+rm -rf examples
+rm Cargo.toml
+
+mv ../libnm-rs-gen/src .
+mv ../libnm-rs-gen/nm-sys .
+mv ../libnm-rs-gen/examples .
+mv ../libnm-rs-gen/Cargo.toml .
+
+cargo run --example connectivity || true
+
+cargo run --example connections || true
+
+cargo clippy || true
+
+git status
 
 popd # libnm-rs
 
-popd # build
+popd # dist
