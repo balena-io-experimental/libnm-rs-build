@@ -5,6 +5,7 @@ import itertools
 import json
 import qtoml
 import pkgconfig
+import copy
 
 from collections import OrderedDict as odict
 from operator import itemgetter
@@ -44,7 +45,10 @@ def generate():
 
     versions = get_versions_list(namespace)
 
-    add_features_cargo_toml(versions)
+    meta = read_toml("../../meta.toml")
+
+    generate_cargo_toml(meta, versions)
+    generate_sys_cargo_toml(meta, versions)
 
 def strip_namespaces(data):
     if type(data) == list:
@@ -133,7 +137,29 @@ def filter_records(entity):
 
     return True
 
-def add_features_cargo_toml(versions):
+def generate_cargo_toml(meta, versions):
+    contents = odict()
+
+    add_package_cargo_toml(contents, meta)
+    add_dependencies_cargo_toml(contents, meta)
+    add_features_cargo_toml(contents, versions)
+
+    save_toml("Cargo.toml", contents)
+
+def add_package_cargo_toml(contents, meta):
+    package = odict()
+    package["name"] = "nm"
+    package["version"] = meta["package"]["version"]
+    package["authors"] = meta["package"]["authors"]
+    contents["package"] = package
+
+def add_dependencies_cargo_toml(contents, meta):
+    dependencies = copy.deepcopy(meta["dependencies"])
+    dependencies.update(meta["shared-dependencies"])
+    dependencies["nm-sys"] = dict(path = "nm-sys")
+    contents["dependencies"] = dependencies
+
+def add_features_cargo_toml(contents, versions):
     features = odict()
 
     previous = None
@@ -148,11 +174,55 @@ def add_features_cargo_toml(versions):
 
     features["default"] = [previous]
 
-    contents = read_toml("Cargo.toml")
-
     contents["features"] = features
 
-    save_toml("Cargo.toml", contents)
+def generate_sys_cargo_toml(meta, versions):
+    contents = odict()
+
+    add_package_sys_cargo_toml(contents, meta)
+    add_lib_sys_cargo_toml(contents, meta)
+    add_dependencies_sys_cargo_toml(contents, meta)
+    add_features_sys_cargo_toml(contents, versions)
+
+    save_toml("Cargo-sys.toml", contents)
+
+def add_package_sys_cargo_toml(contents, meta):
+    package = odict()
+    package["name"] = "nm-sys"
+    package["version"] = meta["package"]["version"]
+    package["authors"] = meta["package"]["authors"]
+    package["links"] = "nm"
+    package["build"] = "build.rs"
+    package["metadata"] = dict(docs = dict(rs = dict(features = ["dox"])))
+
+    contents["package"] = package
+
+def add_lib_sys_cargo_toml(contents, meta):
+    lib = odict()
+    lib["name"] = "nm_sys"
+    contents["lib"] = lib
+
+def add_dependencies_sys_cargo_toml(contents, meta):
+    contents["dependencies"] = meta["shared-dependencies"]
+    contents["build-dependencies"] = meta["sys-build-dependencies"]
+    contents["dev-dependencies"] = meta["sys-dev-dependencies"]
+
+def add_features_sys_cargo_toml(contents, versions):
+    features = odict()
+
+    previous = None
+    for version in versions:
+        current = "v{}_{}".format(version[0], version[1])
+
+        current_list = []
+        if previous is not None:
+            current_list.append(previous)
+        features[current] = current_list
+        previous = current
+
+    features["dox"] = []
+
+    contents["features"] = features
 
 def get_versions_list(namespace):
     libnm_version = minor_libnm_version()

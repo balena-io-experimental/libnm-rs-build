@@ -40,6 +40,8 @@ popd # gir-files
 
 ../../gir -d gir-files -c Gir_NM.toml
 
+mv Cargo-sys.toml nm-sys/Cargo.toml
+
 rm -rf nm-sys/src/auto
 rm -rf src/auto/versions.txt
 

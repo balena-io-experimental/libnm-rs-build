@@ -1,0 +1,27 @@
+[package]
+version = '0.2.2'
+authors = ['majorz']
+
+[shared-dependencies]
+libc = '0.2'
+glib-sys = "0.9.1"
+gio-sys = "0.9.1"
+gobject-sys = "0.9.1"
+
+[dependencies]
+lazy_static = '1.2'
+bitflags = '1.0'
+futures-core = '0.3'
+futures-task = '0.3'
+futures-executor = '0.3'
+futures-util = '0.3'
+futures-channel = '0.3'
+glib = "0.9.1"
+gio = "0.8.0"
+
+[sys-build-dependencies]
+pkg-config = "0.3.7"
+
+[sys-dev-dependencies]
+shell-words = "0.1.0"
+tempfile = "3"
