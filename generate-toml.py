@@ -41,7 +41,9 @@ def generate():
 
     generate_nm_toml(namespace)
 
-    add_features_cargo_toml(namespace)
+    versions = get_versions_list(namespace)
+
+    add_features_cargo_toml(versions)
 
 def strip_namespaces(data):
     if type(data) == list:
@@ -130,17 +132,7 @@ def filter_records(entity):
 
     return True
 
-def add_features_cargo_toml(namespace):
-    versions = set()
-
-    for key, value in namespace.items():
-        if isinstance(value, list):
-            collect_versions(value, versions)
-
-    versions = list(versions)
-    versions = [version for version in versions if version <= LATEST_VERSION]
-    versions.sort(key=itemgetter(1))
-
+def add_features_cargo_toml(versions):
     features = odict()
 
     previous = None
@@ -160,6 +152,19 @@ def add_features_cargo_toml(namespace):
     contents["features"] = features
 
     save_toml("Cargo.toml", contents)
+
+def get_versions_list(namespace):
+    versions = set()
+
+    for key, value in namespace.items():
+        if isinstance(value, list):
+            collect_versions(value, versions)
+
+    versions = list(versions)
+    versions = [version for version in versions if version <= LATEST_VERSION]
+    versions.sort(key=itemgetter(1))
+
+    return versions
 
 def collect_versions(value, versions):
     if isinstance(value, dict):
