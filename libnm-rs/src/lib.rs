@@ -30,18 +30,9 @@ extern crate futures_core;
 
 extern crate nm_sys;
 
-pub use glib::Error;
-
-mod auto;
-pub use auto::functions::*;
-pub use auto::*;
-
 pub use gio::NONE_CANCELLABLE;
 
-pub mod prelude {
-    pub use glib::prelude::*;
+pub use glib::prelude::*;
 
-    pub use auto::traits::*;
-}
-
-pub use prelude::*;
+pub use functions::*;
+pub use traits::*;

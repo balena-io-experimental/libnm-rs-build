@@ -8,6 +8,8 @@ import qtoml
 from collections import OrderedDict as odict
 from operator import itemgetter
 
+LATEST_VERSION = (1, 22)
+
 MANUAL = [
     'GObject.Object',
     'GLib.ByteArray',
@@ -136,7 +138,7 @@ def add_features_cargo_toml(namespace):
             collect_versions(value, versions)
 
     versions = list(versions)
-    versions = [version for version in versions if version <= (1, 22)]
+    versions = [version for version in versions if version <= LATEST_VERSION]
     versions.sort(key=itemgetter(1))
 
     features = odict()

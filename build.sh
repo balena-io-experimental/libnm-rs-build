@@ -48,6 +48,8 @@ popd
 
 ../../gir -d gir-files -c Gir_NM.toml
 
+../../merge-auto.py
+
 cargo fmt
 
 RUST_BACKTRACE=1 cargo run --example connectivity || true
