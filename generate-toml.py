@@ -4,6 +4,7 @@
 import itertools
 import json
 import qtoml
+import pkgconfig
 
 from collections import OrderedDict as odict
 from operator import itemgetter
@@ -154,6 +155,8 @@ def add_features_cargo_toml(versions):
     save_toml("Cargo.toml", contents)
 
 def get_versions_list(namespace):
+    libnm_version = minor_libnm_version()
+
     versions = set()
 
     for key, value in namespace.items():
@@ -161,10 +164,15 @@ def get_versions_list(namespace):
             collect_versions(value, versions)
 
     versions = list(versions)
-    versions = [version for version in versions if version <= LATEST_VERSION]
+    versions = [version for version in versions if version <= libnm_version]
     versions.sort(key=itemgetter(1))
 
     return versions
+
+def minor_libnm_version():
+    version = pkgconfig.modversion('libnm')
+    version = version.split('.')
+    return (int(version[0]), int(version[1]))
 
 def collect_versions(value, versions):
     if isinstance(value, dict):
