@@ -20,6 +20,8 @@ def main():
 
     root = tree.getroot()
 
+    convert_constructors(root)
+
     shorten_versions(root)
 
     remove_doc_versions(root)
@@ -69,10 +71,14 @@ def main():
     remove_bool_option(root)
 
     remove_u8_optional_nullable(root)
-    
+
     remove_ip_routing_rule_set(root)
 
     tree.write('NM-1.0.gir', encoding='utf-8', xml_declaration=True, pretty_print=True)
+
+def convert_constructors(root):
+    for el in root.xpath('//ns:function[@name="new"]', namespaces=NSS):
+        el.tag = "{http://www.gtk.org/introspection/core/1.0}constructor"
 
 def shorten_versions(root):
     for el in root.xpath('//*[@version]', namespaces=NSS):
