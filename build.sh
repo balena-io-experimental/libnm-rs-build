@@ -40,6 +40,10 @@ popd # gir-files
 
 ../../gir -d gir-files -c Gir_NM.toml
 
+../../gir -d gir-files -c Gir_NM.toml --doc-target-path docs.md -m doc
+
+rustdoc-stripper -g -o docs.md
+
 mv Cargo-sys.toml nm-sys/Cargo.toml
 
 rm -rf nm-sys/src/auto
