@@ -74,6 +74,8 @@ def main():
 
     remove_ip_routing_rule_set(root)
 
+    remove_foreach_methods(root)
+
     tree.write('NM-1.0.gir', encoding='utf-8', xml_declaration=True, pretty_print=True)
 
 def convert_constructors(root):
@@ -194,6 +196,10 @@ def remove_u8_optional_nullable(root):
 def remove_ip_routing_rule_set(root):
     remove_by_xpath(root, '//ns:method[@c:identifier="nm_ip_routing_rule_set_from"]')
     remove_by_xpath(root, '//ns:method[@c:identifier="nm_ip_routing_rule_set_to"]')
+
+def remove_foreach_methods(root):
+    remove_by_xpath(root, '//ns:method[@c:identifier="nm_setting_vpn_foreach_data_item"]')
+    remove_by_xpath(root, '//ns:method[@c:identifier="nm_setting_vpn_foreach_secret"]')
 
 def remove_by_xpath(root, xpath):
     if DEBUG:
