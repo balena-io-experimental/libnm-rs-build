@@ -22,8 +22,6 @@ def main():
 
     convert_constructors(root)
 
-    shorten_versions(root)
-
     remove_doc_versions(root)
 
     remove_no_types(root)
@@ -52,10 +50,6 @@ def main():
 
     remove_u8_pointer_functions(root)
 
-    remove_device_wpan(root)
-
-    remove_tc_action(root)
-
     remove_array_properties(root)
 
     remove_slist(root)
@@ -63,8 +57,6 @@ def main():
     remove_uint_pointer_return(root)
 
     remove_checkpoint_create(root)
-
-    remove_get_interface_names(root)
 
     remove_add_and_activate_connection2(root)
 
@@ -81,13 +73,6 @@ def main():
 def convert_constructors(root):
     for el in root.xpath('//ns:function[@name="new"]', namespaces=NSS):
         el.tag = "{http://www.gtk.org/introspection/core/1.0}constructor"
-
-def shorten_versions(root):
-    for el in root.xpath('//*[@version]', namespaces=NSS):
-        version = el.attrib['version']
-        splitted = version.split('.')
-        if len(splitted) == 3:
-            el.attrib['version'] = splitted[0] + '.' + splitted[1]
 
 def remove_doc_versions(root):
     remove_by_xpath(root, './/ns:doc-version')
@@ -152,14 +137,6 @@ def remove_u8_pointer_functions(root):
     remove_by_xpath(root, '//ns:function[.//ns:type[@name="guint8" and @c:type="gconstpointer"]]')
     remove_by_xpath(root, '//ns:function[.//ns:type[@name="guint8" and @c:type="gpointer"]]')
 
-def remove_device_wpan(root):
-    remove_by_xpath(root, '//ns:class[@name="DeviceWpan"]')
-
-def remove_tc_action(root):
-    remove_by_xpath(root, '//ns:record[@name="TCAction"]')
-    remove_by_xpath(root, '//ns:function[.//ns:type/@name="TCAction"]')
-    remove_by_xpath(root, '//ns:method[.//ns:type/@name="TCAction"]')
-
 def remove_array_properties(root):
     remove_by_xpath(root, '//ns:property[.//ns:array[@name="GLib.PtrArray"]/ns:type[@name="IPAddress"]]')
     remove_by_xpath(root, '//ns:property[.//ns:array[@name="GLib.PtrArray"]/ns:type[@name="IPRoute"]]')
@@ -179,9 +156,6 @@ def remove_uint_pointer_return(root):
 
 def remove_checkpoint_create(root):
     remove_by_xpath(root, '//ns:method[@name="checkpoint_create"]')
-
-def remove_get_interface_names(root):
-    remove_by_xpath(root, '//ns:method[@name="get_interface_names"]')
 
 def remove_add_and_activate_connection2(root):
     remove_by_xpath(root, '//ns:method[@name="add_and_activate_connection2"]')
