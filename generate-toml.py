@@ -11,8 +11,6 @@ import argparse
 from collections import OrderedDict as odict
 from operator import itemgetter
 
-LATEST_VERSION = (1, 22)
-
 MANUAL = [
     'GObject.Object',
     'GLib.ByteArray',
