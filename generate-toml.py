@@ -194,7 +194,11 @@ def add_package_sys_cargo_toml(contents, meta):
     package["authors"] = meta["package"]["authors"]
     package["links"] = "nm"
     package["build"] = "build.rs"
-    package["metadata"] = dict(docs = dict(rs = dict(features = ["dox"])))
+
+    metadata = odict()
+    metadata["docs"] = dict(rs = dict(features = ["dox"]))
+    metadata["system-deps"] = dict(libnm = "1")
+    package["metadata"] = metadata
 
     contents["package"] = package
 
