@@ -6,6 +6,7 @@ import json
 import qtoml
 import pkgconfig
 import copy
+import argparse
 
 from collections import OrderedDict as odict
 from operator import itemgetter
@@ -280,4 +281,18 @@ def save_toml(path, contents):
     f.write(toml)
     f.close()
 
-generate()
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--edition', action='store_true')
+    args = parser.parse_args()
+    if args.edition:
+        include_edition()
+    else:
+        generate()
+
+def include_edition():
+    contents = read_toml('Cargo.toml')
+    contents['package']['edition'] = '2018'
+    save_toml('Cargo.toml', contents)
+
+main()
