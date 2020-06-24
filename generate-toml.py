@@ -157,6 +157,7 @@ def add_dependencies_cargo_toml(contents, meta):
     dependencies.update(meta["shared-dependencies"])
     dependencies["nm-sys"] = dict(path = "nm-sys")
     contents["dependencies"] = dependencies
+    contents["dev-dependencies"] = meta["dev-dependencies"]
 
 def add_features_cargo_toml(contents, versions):
     features = odict()

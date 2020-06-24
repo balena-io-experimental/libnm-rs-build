@@ -95,20 +95,23 @@ rm Cargo.toml
 
 mv ../libnm-rs-gen/src .
 mv ../libnm-rs-gen/nm-sys .
-mv ../libnm-rs-gen/examples .
 mv ../libnm-rs-gen/Cargo.toml .
 
 echo -e "\e[1;36m[build] cargo fix --edition\e[0m"
 
 cargo fix --edition --allow-dirty
 
-echo -e "\e[1;36m[build] cargo fmt\e[0m"
+echo -e "\e[1;36m[build] Move examples\e[0m"
 
-cargo fmt
+mv ../libnm-rs-gen/examples .
 
 echo -e "\e[1;36m[build] generate-toml.py --edition\e[0m"
 
 ../../generate-toml.py --edition
+
+echo -e "\e[1;36m[build] cargo fmt\e[0m"
+
+cargo fmt
 
 echo -e "\e[1;36m[build] example connectivity\e[0m"
 
@@ -118,7 +121,7 @@ echo -e "\e[1;36m[build] example connections\e[0m"
 
 cargo run --example connections || true
 
-echo -e "\e[1;36m[build] cargo clippy\e[0m"
+echo -e "\e[1;36m[build] example access-point\e[0m"
 
 cargo clippy || true
 

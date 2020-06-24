@@ -19,6 +19,10 @@ futures-channel = "0.3"
 glib = "0.9.1"
 gio = "0.8.0"
 
+[dev-dependencies]
+anyhow = "1.0"
+clap = "3.0.0-beta.1"
+
 [sys-build-dependencies]
 system-deps = "1.3"
 
