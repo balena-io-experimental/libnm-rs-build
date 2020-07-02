@@ -90,7 +90,6 @@ echo -e "\e[1;36m[build] Move generated files\e[0m"
 
 rm -rf src
 rm -rf nm-sys
-rm -rf examples
 rm Cargo.toml
 
 mv ../libnm-rs-gen/src .
@@ -100,10 +99,6 @@ mv ../libnm-rs-gen/Cargo.toml .
 echo -e "\e[1;36m[build] cargo fix --edition\e[0m"
 
 cargo fix --edition --allow-dirty
-
-echo -e "\e[1;36m[build] Move examples\e[0m"
-
-mv ../libnm-rs-gen/examples .
 
 echo -e "\e[1;36m[build] generate-toml.py --edition\e[0m"
 
