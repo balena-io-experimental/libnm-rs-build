@@ -125,7 +125,7 @@ cargo run --example list-connections || true
 
 echo -e "\e[1;36m[build] build access-point\e[0m"
 
-cargo build --example list-connections || true
+cargo build --example access-point || true
 
 echo -e "\e[1;36m[build] cargo clippy\e[0m"
 
