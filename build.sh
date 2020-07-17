@@ -129,7 +129,11 @@ echo -e "\e[1;36m[build] build access-point\e[0m"
 
 cargo build --example list-connections || true
 
+echo -e "\e[1;36m[build] cargo clippy\e[0m"
+
 cargo clippy || true
+
+echo -e "\e[1;36m[build] git status\e[0m"
 
 git status
 
