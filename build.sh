@@ -101,12 +101,10 @@ mv ../libnm-rs-gen/src .
 mv ../libnm-rs-gen/nm-sys .
 mv ../libnm-rs-gen/Cargo.toml .
 
-mv examples ../libnm-rs-examples
-
 echo -e "\e[1;36m[build] cargo fix --edition\e[0m"
 
+mv examples ../libnm-rs-examples
 cargo fix --edition --allow-dirty
-
 mv ../libnm-rs-examples examples
 
 echo -e "\e[1;36m[build] generate-toml.py --edition\e[0m"
