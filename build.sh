@@ -121,9 +121,9 @@ echo -e "\e[1;36m[build] example connectivity\e[0m"
 
 cargo run --example connectivity || true
 
-echo -e "\e[1;36m[build] example connections\e[0m"
+echo -e "\e[1;36m[build] example list-connections\e[0m"
 
-cargo run --example connections || true
+cargo run --example list-connections || true
 
 echo -e "\e[1;36m[build] example access-point\e[0m"
 
