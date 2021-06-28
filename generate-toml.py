@@ -151,11 +151,16 @@ def add_package_cargo_toml(contents, meta):
     package["version"] = meta["package"]["version"]
     package["authors"] = meta["package"]["authors"]
     contents["package"] = package
+    package["edition"] = "2018"
 
 def add_dependencies_cargo_toml(contents, meta):
     dependencies = copy.deepcopy(meta["dependencies"])
-    dependencies.update(meta["shared-dependencies"])
-    dependencies["nm-sys"] = dict(path = "nm-sys")
+
+    ffi = odict()
+    ffi["package"] = "nm-sys"
+    ffi["path"] = "nm-sys"
+    dependencies["ffi"] = ffi
+
     contents["dependencies"] = dependencies
     contents["dev-dependencies"] = meta["dev-dependencies"]
 
@@ -166,7 +171,7 @@ def add_features_cargo_toml(contents, versions):
     for version in versions:
         current = "v{}_{}".format(version[0], version[1])
 
-        current_list = ["nm-sys/" + current]
+        current_list = ["ffi/" + current]
         if previous is not None:
             current_list.append(previous)
         features[current] = current_list
@@ -191,7 +196,8 @@ def add_package_sys_cargo_toml(contents, meta):
     package["name"] = "nm-sys"
     package["version"] = meta["package"]["version"]
     package["authors"] = meta["package"]["authors"]
-    package["links"] = "nm"
+    package["links"] = '"nm"'
+    package["edition"] = "2018"
     package["build"] = "build.rs"
 
     metadata = odict()
@@ -207,7 +213,7 @@ def add_lib_sys_cargo_toml(contents, meta):
     contents["lib"] = lib
 
 def add_dependencies_sys_cargo_toml(contents, meta):
-    contents["dependencies"] = meta["shared-dependencies"]
+    contents["dependencies"] = meta["sys-dependencies"]
     contents["build-dependencies"] = meta["sys-build-dependencies"]
     contents["dev-dependencies"] = meta["sys-dev-dependencies"]
 
