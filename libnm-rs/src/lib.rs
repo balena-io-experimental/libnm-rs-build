@@ -11,7 +11,6 @@
 #![cfg_attr(feature = "cargo-clippy", allow(clippy::too_many_arguments))]
 #![cfg_attr(feature = "cargo-clippy", allow(clippy::single_component_path_imports))]
 
-#[macro_use]
 extern crate bitflags;
 
 extern crate once_cell;
@@ -19,7 +18,6 @@ extern crate once_cell;
 extern crate gio_sys;
 extern crate glib_sys;
 extern crate gobject_sys;
-#[macro_use]
 extern crate glib;
 extern crate gio;
 extern crate libc;
@@ -30,7 +28,7 @@ extern crate fragile;
 #[cfg(feature = "futures")]
 extern crate futures_core;
 
-extern crate nm_sys;
+extern crate ffi;
 
 pub use gio::NONE_CANCELLABLE;
 
