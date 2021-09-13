@@ -24,15 +24,7 @@ def main():
 
     remove_doc_versions(root)
 
-    remove_no_types(root)
-
-    remove_unknown_types(root)
-
     rename_number_fields(root)
-
-    remove_dbus_connection(root)
-
-    remove_in_addr_t(root)
 
     remove_in6_addr(root)
 
@@ -66,8 +58,6 @@ def main():
 
     remove_ip_routing_rule_set(root)
 
-    remove_foreach_methods(root)
-
     tree.write('NM-1.0.gir', encoding='utf-8', xml_declaration=True, pretty_print=True)
 
 def convert_constructors(root):
@@ -77,36 +67,9 @@ def convert_constructors(root):
 def remove_doc_versions(root):
     remove_by_xpath(root, './/ns:doc-version')
 
-def remove_no_types(root):
-    for type_el in root.xpath('//ns:type[not(@name) and @c:type]', namespaces=NSS):
-        c_type = type_el.xpath('@c:type', namespaces=NSS)[0]
-
-        if c_type[:3] == '_NM':
-            c_type = '_' + c_type[3:]
-
-        type_el.attrib['name'] = c_type
-
-def remove_unknown_types(root):
-    c_types = [
-        "_NMSettInfoProperty",
-        "_NMSettInfoSetting",
-        "_NMMetaSettingInfo",
-    ]
-    for c_type in c_types:
-        xpath = '//ns:type[contains(@c:type, {})][1]/ancestor::ns:field[1]'.format(c_type)
-        remove_by_xpath(root, xpath)
-
 def rename_number_fields(root):
     for type_el in root.xpath('//*[@name and contains("0123456789", substring(@name, 1, 1))]', namespaces=NSS):
         type_el.attrib['name'] = '_' + type_el.attrib['name']
-
-def remove_dbus_connection(root):
-    remove_by_xpath(root, '//ns:property[ns:type/@name="Gio.DBusConnection"]')
-
-    remove_by_xpath(root, '//ns:method[.//ns:type/@name="Gio.DBusConnection"]')
-
-def remove_in_addr_t(root):
-    remove_by_xpath(root, '//ns:parameter[.//ns:type/@name="in_addr_t"]')
 
 def remove_in6_addr(root):
     remove_by_xpath(root, '//ns:parameter[.//ns:type/@c:type="const in6_addr*"]')
@@ -170,10 +133,6 @@ def remove_u8_optional_nullable(root):
 def remove_ip_routing_rule_set(root):
     remove_by_xpath(root, '//ns:method[@c:identifier="nm_ip_routing_rule_set_from"]')
     remove_by_xpath(root, '//ns:method[@c:identifier="nm_ip_routing_rule_set_to"]')
-
-def remove_foreach_methods(root):
-    remove_by_xpath(root, '//ns:method[@c:identifier="nm_setting_vpn_foreach_data_item"]')
-    remove_by_xpath(root, '//ns:method[@c:identifier="nm_setting_vpn_foreach_secret"]')
 
 def remove_by_xpath(root, xpath):
     if DEBUG:
