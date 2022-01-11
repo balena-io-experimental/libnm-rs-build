@@ -30,7 +30,7 @@ extern crate futures_core;
 
 extern crate ffi;
 
-pub use gio::NONE_CANCELLABLE;
+pub use gio::Cancellable;
 
 pub use glib::prelude::*;
 
