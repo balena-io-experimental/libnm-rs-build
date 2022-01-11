@@ -25,7 +25,10 @@ gobject-sys = { git = "https://github.com/gtk-rs/gtk-rs-core" }
 
 [dev-dependencies]
 anyhow = "1.0"
-clap = "3.0.0-beta.1"
+
+[dev-dependencies.clap]
+version = "3"
+features = ["derive"]
 
 [sys-build-dependencies]
 system-deps = "1.3"
