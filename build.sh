@@ -67,7 +67,7 @@ echo -e "\e[1;36m[build] gir doc\e[0m"
 
 echo -e "\e[1;36m[build] rustdoc-stripper\e[0m"
 
-rustdoc-stripper -g -o docs.md
+../../rustdoc-stripper -g -o docs.md
 
 mv Cargo-sys.toml nm-sys/Cargo.toml
 
@@ -86,6 +86,14 @@ then
 fi
 
 pushd libnm-rs
+
+echo -e "\e[1;36m[build] git reset --hard\e[0m"
+
+git reset --hard
+
+echo -e "\e[1;36m[build] git fetch\e[0m"
+
+git fetch
 
 echo -e "\e[1;36m[build] git pull --rebase\e[0m"
 
