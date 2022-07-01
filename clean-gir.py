@@ -50,8 +50,6 @@ def main():
 
     remove_checkpoint_create(root)
 
-    remove_add_and_activate_connection2(root)
-
     remove_bool_option(root)
 
     remove_u8_optional_nullable(root)
@@ -119,10 +117,6 @@ def remove_uint_pointer_return(root):
 
 def remove_checkpoint_create(root):
     remove_by_xpath(root, '//ns:method[@name="checkpoint_create"]')
-
-def remove_add_and_activate_connection2(root):
-    remove_by_xpath(root, '//ns:method[@name="add_and_activate_connection2"]')
-    remove_by_xpath(root, '//ns:method[@name="add_and_activate_connection2_finish"]')
 
 def remove_bool_option(root):
     remove_by_xpath(root, '//ns:method[.//ns:parameter[@allow-none="1" and @nullable="1"]/ns:type[@c:type="gboolean*"]]')
