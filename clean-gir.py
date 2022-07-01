@@ -72,7 +72,7 @@ def rename_number_fields(root):
         type_el.attrib['name'] = '_' + type_el.attrib['name']
 
 def remove_in6_addr(root):
-    remove_by_xpath(root, '//ns:parameter[.//ns:type/@c:type="const in6_addr*"]')
+    remove_by_xpath(root, '//ns:function[@c:identifier="nm_utils_inet6_ntop"]')
 
 def remove_stat(root):
     remove_by_xpath(root, '//ns:parameter[.//ns:type/@c:type="const stat*"]')
