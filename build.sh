@@ -43,6 +43,7 @@ echo -e "\e[1;36m[build] Clean gir\e[0m"
 
 export PATH=$PATH:~/.local/bin
 
+# Install with `pip install https://github.com/hay/xml2json/zipball/master`
 echo -e "\e[1;36m[build] xml2json\e[0m"
 
 xml2json -t xml2json --pretty --strip_text --strip_namespace --strip_newlines -o NM-1.0.json NM-1.0.gir
@@ -53,6 +54,7 @@ echo -e "\e[1;36m[build] generate-toml.py\e[0m"
 
 ../../generate-toml.py
 
+# Add a symlink to compiled https://github.com/gtk-rs/gir
 echo -e "\e[1;36m[build] gir sys\e[0m"
 
 ../../gir -d gir-files -c Gir_NM.sys.toml -o nm-sys
@@ -65,6 +67,7 @@ echo -e "\e[1;36m[build] gir doc\e[0m"
 
 ../../gir -d gir-files -c Gir_NM.toml --doc-target-path docs.md -m doc
 
+# Add a symlink to compiled https://github.com/GuillaumeGomez/rustdoc-stripper
 echo -e "\e[1;36m[build] rustdoc-stripper\e[0m"
 
 ../../rustdoc-stripper -g -o docs.md
